@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Game Development Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #16161f;
+    --surface: #1c1c28;
+    --surface2: #222232;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0f0f8;
+    --muted: #888899;
+    --dim: #555566;
+    --accent-cyan: #00e5ff;
+    --accent-violet: #a855f7;
+    --accent-amber: #f59e0b;
+    --accent-green: #22d3a0;
+    --accent-red: #f87171;
+    --accent-blue: #60a5fa;
+    --accent-pink: #f472b6;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* GRID NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+  }
+  .nav-links {
+    display: flex;
+    gap: 0;
+    list-style: none;
+  }
+  .nav-links a {
+    display: block;
+    padding: 0 12px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 2rem 4rem;
+    overflow: hidden;
+  }
+  .hero-glow {
+    position: absolute;
+    width: 800px; height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,229,255,0.06) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    background: rgba(0,229,255,0.06);
+    border: 1px solid rgba(0,229,255,0.2);
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .hero h1 .line1 { display: block; color: var(--text); }
+  .hero h1 .line2 {
+    display: block;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    max-width: 640px;
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 3rem;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent-cyan);
+    display: block;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: var(--font-mono);
+    margin-top: 4px;
+  }
+  .scroll-hint {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--dim);
+    font-size: 11px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.1em;
+    animation: fadeInUp 1s ease 1s both;
+  }
+  .scroll-arrow {
+    width: 24px; height: 24px;
+    border-right: 2px solid var(--dim);
+    border-bottom: 2px solid var(--dim);
+    transform: rotate(45deg);
+    animation: scrollBounce 1.5s infinite;
+  }
+  @keyframes scrollBounce {
+    0%, 100% { transform: rotate(45deg) translateY(0); }
+    50% { transform: rotate(45deg) translateY(4px); }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* PHASE TIMELINE */
+  .timeline-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+  }
+
+  /* PHASE BLOCK */
+  .phase {
+    margin-bottom: 5rem;
+    position: relative;
+  }
+  .phase-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 1.5rem;
+    align-items: start;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  .phase-num {
+    font-family: var(--font-display);
+    font-size: 6rem;
+    font-weight: 800;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.08);
+    position: absolute;
+    top: -20px;
+    left: -10px;
+    pointer-events: none;
+    user-select: none;
+  }
+  .phase-meta {
+    padding-top: 4px;
+  }
+  .phase-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  .phase-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+  .phase-desc {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 600px;
+    line-height: 1.6;
+  }
+  .phase-duration {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 6px;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* MODULE GRID */
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .module {
+    background: var(--bg2);
+    padding: 1.5rem;
+    transition: background 0.2s;
+  }
+  .module:hover { background: var(--bg3); }
+  .module-icon {
+    font-size: 20px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .module-name {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .module-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  .topic-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .topic-list li {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+  }
+  .topic-list li::before {
+    content: '→';
+    color: var(--dim);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* PROJECT CARDS */
+  .project-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .project-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--dim);
+    margin-bottom: 8px;
+  }
+  .project-name {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .project-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.05);
+    color: var(--dim);
+    border: 1px solid var(--border);
+  }
+
+  /* SKILL BARS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 8px;
+    margin-bottom: 2rem;
+  }
+  .skill-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg2);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .skill-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .skill-name {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--text);
+    flex: 1;
+  }
+  .skill-level {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--dim);
+  }
+
+  /* RESOURCE BLOCKS */
+  .resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+    margin-top: 1rem;
+  }
+  .resource-item {
+    padding: 12px;
+    background: var(--bg2);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .resource-type {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+    margin-bottom: 4px;
+  }
+  .resource-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  /* DIVIDER */
+  .phase-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 5rem;
+    color: var(--dim);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  .phase-divider::before, .phase-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* COLORS PER PHASE */
+  .p1 { --phase-color: #00e5ff; --phase-rgb: 0,229,255; }
+  .p2 { --phase-color: #a855f7; --phase-rgb: 168,85,247; }
+  .p3 { --phase-color: #22d3a0; --phase-rgb: 34,211,160; }
+  .p4 { --phase-color: #f59e0b; --phase-rgb: 245,158,11; }
+  .p5 { --phase-color: #f472b6; --phase-rgb: 244,114,182; }
+  .p6 { --phase-color: #60a5fa; --phase-rgb: 96,165,250; }
+
+  .phase-badge { background: rgba(var(--phase-rgb), 0.1); color: var(--phase-color); border: 1px solid rgba(var(--phase-rgb), 0.2); }
+  .phase-title { color: var(--phase-color); }
+  .project-card::before { background: var(--phase-color); }
+  .skill-dot { background: var(--phase-color); }
+
+  /* CHECKPOINT BOX */
+  .checkpoint {
+    border: 1px solid rgba(var(--phase-rgb), 0.25);
+    background: rgba(var(--phase-rgb), 0.04);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .checkpoint-title {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--phase-color);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .checkpoint-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 6px;
+  }
+  .checkpoint-list li {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+  }
+  .checkpoint-list li::before {
+    content: '✓';
+    color: var(--phase-color);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    text-align: center;
+    background: var(--bg2);
+  }
+  footer p {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--dim);
+  }
+
+  /* FILTER BAR */
+  .filter-bar {
+    position: sticky;
+    top: 56px;
+    z-index: 90;
+    background: rgba(10,10,15,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 2rem;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    padding: 5px 14px;
+    border-radius: 100px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--surface);
+    border-color: var(--border2);
+    color: var(--text);
+  }
+
+  /* DEEP DIVE TABLE */
+  .deep-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin: 1rem 0;
+  }
+  .deep-table th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+    font-weight: 500;
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .deep-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    vertical-align: top;
+  }
+  .deep-table td:first-child {
+    font-family: var(--font-mono);
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .deep-table tr:last-child td { border-bottom: none; }
+  .deep-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* INLINE CODE */
+  code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--accent-cyan);
+  }
+
+  /* WIDE TABLE WRAPPER */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  /* READING BLOCKS */
+  .reading-block {
+    background: var(--bg2);
+    border-left: 2px solid var(--phase-color);
+    padding: 1rem 1.25rem;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 1rem;
+  }
+  .reading-block p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .reading-block strong { color: var(--text); font-weight: 500; }
+
+  /* LEVEL BADGE */
+  .level-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .level-beginner { background: rgba(34,211,160,0.12); color: #22d3a0; }
+  .level-intermediate { background: rgba(245,158,11,0.12); color: #f59e0b; }
+  .level-advanced { background: rgba(168,85,247,0.12); color: #a855f7; }
+  .level-expert { background: rgba(248,113,113,0.12); color: #f87171; }
+
+  /* WEEK INDICATOR */
+  .week-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 1rem;
+  }
+  .week-cell {
+    width: 28px; height: 28px;
+    border-radius: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--dim);
+    position: relative;
+  }
+  .week-cell.active {
+    background: rgba(var(--phase-rgb), 0.15);
+    border-color: rgba(var(--phase-rgb), 0.4);
+    color: var(--phase-color);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">GameDev Roadmap</div>
+  <ul class="nav-links">
+    <li><a href="#phase1">C# Foundations</a></li>
+    <li><a href="#phase2">DSA + Algorithms</a></li>
+    <li><a href="#phase3">Unity Core</a></li>
+    <li><a href="#phase4">Blender + Art</a></li>
+    <li><a href="#phase5">Advanced Unity</a></li>
+    <li><a href="#phase6">Enterprise</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-tag">University-Level Curriculum</div>
+  <h1>
+    <span class="line1">Enterprise</span>
+    <span class="line2">Game Development</span>
+  </h1>
+  <p class="hero-sub">A complete university-level roadmap from C# fundamentals and algorithm design through professional Unity and Blender workflows — engineered for studio-grade production pipelines.</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num">6</span><span class="stat-label">Phases</span></div>
+    <div class="stat"><span class="stat-num">24+</span><span class="stat-label">Months</span></div>
+    <div class="stat"><span class="stat-num">120+</span><span class="stat-label">Topics</span></div>
+    <div class="stat"><span class="stat-num">30+</span><span class="stat-label">Projects</span></div>
+  </div>
+  <div class="scroll-hint">
+    scroll to begin
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<nav class="filter-bar">
+  <a class="filter-btn" href="#phase1">01 · C# Foundations</a>
+  <a class="filter-btn" href="#phase2">02 · DSA &amp; Game Algorithms</a>
+  <a class="filter-btn" href="#phase3">03 · Unity Core</a>
+  <a class="filter-btn" href="#phase4">04 · Blender &amp; 3D Art</a>
+  <a class="filter-btn" href="#phase5">05 · Advanced Unity Systems</a>
+  <a class="filter-btn" href="#phase6">06 · Enterprise Pipeline</a>
+</nav>
+
+<div class="timeline-wrapper">
+
+  <!-- ═══════════════════════════════════════════════
+       PHASE 1 — C# FOUNDATIONS
+  ═══════════════════════════════════════════════ -->
+  <div id="phase1" class="phase p1">
+    <div class="phase-num">01</div>
+    <div class="phase-header">
+      <div></div>
+      <div class="phase-meta">
+        <div class="phase-badge">Phase 01 · C# Mastery</div>
+        <h2 class="phase-title">C# Programming &amp; Console Game Logic</h2>
+        <p class="phase-desc">Master the C# language from the ground up with a focus on game-relevant patterns. Build fully interactive console games to solidify OOP, memory management, and software architecture before touching a game engine.</p>
+        <p class="phase-duration">⏱ Estimated Duration: 3–4 months · ~12–16 weeks</p>
+      </div>
+    </div>
+
+    <div class="week-grid" style="--phase-rgb: 0,229,255">
+      <div class="week-cell active">W1</div><div class="week-cell active">W2</div><div class="week-cell active">W3</div><div class="week-cell active">W4</div>
+      <div class="week-cell active">W5</div><div class="week-cell active">W6</div><div class="week-cell active">W7</div><div class="week-cell active">W8</div>
+      <div class="week-cell active">W9</div><div class="week-cell active">W10</div><div class="week-cell active">W11</div><div class="week-cell active">W12</div>
+      <div class="week-cell">W13</div><div class="week-cell">W14</div><div class="week-cell">W15</div><div class="week-cell">W16</div>
+    </div>
+
+    <div class="section-label">Core Language Modules</div>
+    <div class="module-grid">
+      <div class="module">
+        <span class="module-icon">⚡</span>
+        <div class="module-name">C# Language Fundamentals <span class="level-badge level-beginner">Beginner</span></div>
+        <p class="module-desc">Build a rock-solid foundation in C# syntax before writing any game logic.</p>
+        <ul class="topic-list">
+          <li>Variables, primitives, reference vs value types</li>
+          <li>Stack vs heap memory model, garbage collection</li>
+          <li>Operators, expressions, type casting</li>
+          <li>Control flow: if/else, switch, ternary, null-coalescing</li>
+          <li>Loops: for, while, foreach, break, continue, goto</li>
+          <li>Methods: parameters, return types, overloading</li>
+          <li>ref, out, in parameters — when and why</li>
+          <li>String interpolation, StringBuilder, formatting</li>
+          <li>Exception handling: try/catch/finally, custom exceptions</li>
+          <li>Nullable types and null safety patterns</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🏗</span>
+        <div class="module-name">Object-Oriented Programming <span class="level-badge level-beginner">Beginner</span></div>
+        <p class="module-desc">Deep OOP mastery with real game-entity modeling from day one.</p>
+        <ul class="topic-list">
+          <li>Classes, objects, constructors, destructors</li>
+          <li>Encapsulation: public, private, protected, internal</li>
+          <li>Properties, auto-properties, computed properties</li>
+          <li>Inheritance, base class calls, sealed classes</li>
+          <li>Abstract classes vs concrete classes</li>
+          <li>Interfaces: IComparable, IEnumerable, custom</li>
+          <li>Polymorphism: virtual, override, new keyword</li>
+          <li>Composition over inheritance — game entity modeling</li>
+          <li>Static classes, static members, singleton pattern</li>
+          <li>Nested classes, partial classes</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🔧</span>
+        <div class="module-name">Advanced C# Features <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Modern C# features critical for high-performance game code.</p>
+        <ul class="topic-list">
+          <li>Generics: generic classes, methods, constraints</li>
+          <li>Delegates, Func&lt;&gt;, Action&lt;&gt;, Predicate&lt;&gt;</li>
+          <li>Events, EventHandler, custom event args</li>
+          <li>Lambda expressions and expression trees</li>
+          <li>LINQ: Where, Select, OrderBy, GroupBy, Aggregate</li>
+          <li>Extension methods — adding to existing types</li>
+          <li>Operator overloading for game math (Vector2D)</li>
+          <li>Indexers, iterators, yield return</li>
+          <li>Attributes and reflection basics</li>
+          <li>Records, init-only properties (C# 9+)</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">⚙️</span>
+        <div class="module-name">Async, Concurrency &amp; Memory <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Writing performant, non-blocking game systems and memory-efficient code.</p>
+        <ul class="topic-list">
+          <li>async/await, Task, Task&lt;T&gt;, CancellationToken</li>
+          <li>Parallel.For, Parallel.ForEach, PLINQ</li>
+          <li>Thread safety, lock, Monitor, Interlocked</li>
+          <li>Memory&lt;T&gt;, Span&lt;T&gt; for zero-copy buffers</li>
+          <li>ArrayPool&lt;T&gt; and memory pooling patterns</li>
+          <li>Unsafe code and fixed buffers</li>
+          <li>Structs for performance: when to use vs class</li>
+          <li>readonly structs, in parameters for large structs</li>
+          <li>Profiling: BenchmarkDotNet, dotMemory</li>
+          <li>GC pressure reduction strategies</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🎮</span>
+        <div class="module-name">Game Math &amp; Linear Algebra <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Implement all game math from scratch to deeply understand what engines do for you.</p>
+        <ul class="topic-list">
+          <li>2D/3D vectors: add, subtract, scale, magnitude</li>
+          <li>Dot product: angle detection, projection</li>
+          <li>Cross product: normal vectors, 3D orientation</li>
+          <li>Matrices: 2x2, 3x3, 4x4 transforms</li>
+          <li>Matrix multiplication and transformation order</li>
+          <li>Euler angles vs Quaternions — gimbal lock explained</li>
+          <li>Quaternion SLERP, rotation interpolation</li>
+          <li>AABB collision math, circle-circle, ray-AABB</li>
+          <li>Trigonometry for game dev: sin, cos, atan2</li>
+          <li>Fixed-point math for deterministic simulations</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🏛</span>
+        <div class="module-name">Software Architecture &amp; Design Patterns <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Industry-standard patterns used in AAA game codebases.</p>
+        <ul class="topic-list">
+          <li>SOLID principles applied to game systems</li>
+          <li>Game-specific patterns: Game Loop, Update Method</li>
+          <li>Component pattern — building a mini ECS</li>
+          <li>Command pattern for undo/redo and replays</li>
+          <li>Observer/Event-driven architecture</li>
+          <li>State machine pattern for AI and game states</li>
+          <li>Object Pool pattern for bullets, particles</li>
+          <li>Service Locator vs Dependency Injection</li>
+          <li>Repository pattern for save data</li>
+          <li>Flyweight pattern for shared game data</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Console Game Projects</div>
+    <div class="project-row">
+      <div class="project-card">
+        <div class="project-num">PROJECT 01.A</div>
+        <div class="project-name">Text Adventure RPG Engine</div>
+        <p class="project-desc">Build a fully-featured text adventure with rooms, NPCs, inventory system, combat, save/load, and a parser. Focus on OOP modeling and state management.</p>
+        <div class="project-tags"><span class="tag">OOP</span><span class="tag">State</span><span class="tag">File I/O</span><span class="tag">Serialization</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT 01.B</div>
+        <div class="project-name">Roguelike Dungeon Crawler</div>
+        <p class="project-desc">Console-rendered dungeon using ASCII art. Implement procedural generation, FOV, turn-based combat, inventory, and hunger system. Full save state serialization.</p>
+        <div class="project-tags"><span class="tag">Procedural</span><span class="tag">FOV</span><span class="tag">Turn-based</span><span class="tag">JSON</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT 01.C</div>
+        <div class="project-name">Custom 2D Math Library</div>
+        <p class="project-desc">Build Vector2, Vector3, Matrix3x3, Matrix4x4, Quaternion from scratch with full unit test suite using NUnit. Benchmark against System.Numerics.</p>
+        <div class="project-tags"><span class="tag">Math</span><span class="tag">TDD</span><span class="tag">Benchmarks</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT 01.D</div>
+        <div class="project-name">Event-Driven Game Framework</div>
+        <p class="project-desc">Design a reusable event bus, component system, object pool, and game loop abstraction. Other projects in this phase should be migrated to use this framework.</p>
+        <div class="project-tags"><span class="tag">Architecture</span><span class="tag">Events</span><span class="tag">Pooling</span></div>
+      </div>
+    </div>
+
+    <div class="checkpoint">
+      <div class="checkpoint-title">📋 Phase 1 Completion Checklist</div>
+      <ul class="checkpoint-list">
+        <li>Can explain stack vs heap with diagrams</li>
+        <li>Implements interfaces and abstract base classes confidently</li>
+        <li>Uses LINQ fluently for game data queries</li>
+        <li>Writes async game loops with proper cancellation</li>
+        <li>Can implement all 6 SOLID principles in game code</li>
+        <li>Has working Vector3 + Quaternion from scratch</li>
+        <li>Understands GC and avoids allocation hot paths</li>
+        <li>Has shipped a complete console game with save/load</li>
+      </ul>
+    </div>
+
+    <div class="section-label">Recommended Resources</div>
+    <div class="resource-grid">
+      <div class="resource-item"><div class="resource-type">Book</div><div class="resource-name">C# in Depth — Jon Skeet</div></div>
+      <div class="resource-item"><div class="resource-type">Book</div><div class="resource-name">Game Programming Patterns — Nystrom</div></div>
+      <div class="resource-item"><div class="resource-type">Book</div><div class="resource-name">3D Math Primer for Graphics — Dunn</div></div>
+      <div class="resource-item"><div class="resource-type">Course</div><div class="resource-name">Microsoft C# Documentation (official)</div></div>
+      <div class="resource-item"><div class="resource-type">Tool</div><div class="resource-name">Visual Studio 2022 / JetBrains Rider</div></div>
+      <div class="resource-item"><div class="resource-type">Tool</div><div class="resource-name">BenchmarkDotNet + dotMemory</div></div>
+    </div>
+  </div>
+
+  <div class="phase-divider">DSA &amp; Algorithmic Thinking</div>
+
+  <!-- ═══════════════════════════════════════════════
+       PHASE 2 — DSA & GAME ALGORITHMS
+  ═══════════════════════════════════════════════ -->
+  <div id="phase2" class="phase p2">
+    <div class="phase-num">02</div>
+    <div class="phase-header">
+      <div></div>
+      <div class="phase-meta">
+        <div class="phase-badge">Phase 02 · Algorithms</div>
+        <h2 class="phase-title">Data Structures, Algorithms &amp; Game AI</h2>
+        <p class="phase-desc">Every high-performance game system depends on the right data structure and algorithm. Master the fundamentals then apply them directly to pathfinding, spatial queries, procedural generation, and AI decision systems.</p>
+        <p class="phase-duration">⏱ Estimated Duration: 3–4 months · ~12–16 weeks</p>
+      </div>
+    </div>
+
+    <div class="section-label">Core Data Structures</div>
+    <div class="table-wrap">
+      <table class="deep-table">
+        <thead>
+          <tr>
+            <th>Structure</th>
+            <th>Time Complexity</th>
+            <th>Game Use Cases</th>
+            <th>C# Built-in</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Dynamic Array</td><td>O(1) access, O(n) insert worst</td><td>Entity lists, render queues, inventory</td><td><code>List&lt;T&gt;</code></td></tr>
+          <tr><td>Linked List</td><td>O(1) insert/delete, O(n) search</td><td>Command history, undo chains</td><td><code>LinkedList&lt;T&gt;</code></td></tr>
+          <tr><td>Stack</td><td>O(1) push/pop</td><td>Navigation history, expression evaluator</td><td><code>Stack&lt;T&gt;</code></td></tr>
+          <tr><td>Queue</td><td>O(1) enqueue/dequeue</td><td>BFS pathfinding, event queues, spawners</td><td><code>Queue&lt;T&gt;</code></td></tr>
+          <tr><td>Priority Queue</td><td>O(log n) push/pop</td><td>A* open set, task scheduling, AI priority</td><td><code>PriorityQueue&lt;T,P&gt;</code></td></tr>
+          <tr><td>Hash Table</td><td>O(1) amortized</td><td>Asset caches, entity lookup, achievement flags</td><td><code>Dictionary&lt;K,V&gt;</code></td></tr>
+          <tr><td>Hash Set</td><td>O(1) contains</td><td>Visited nodes in pathfinding, flags</td><td><code>HashSet&lt;T&gt;</code></td></tr>
+          <tr><td>Binary Search Tree</td><td>O(log n) average</td><td>Sorted leaderboards, interval trees</td><td>Custom / SortedDictionary</td></tr>
+          <tr><td>Quadtree</td><td>O(log n) spatial query</td><td>2D collision broadphase, LOD, culling</td><td>Custom implementation</td></tr>
+          <tr><td>Octree</td><td>O(log n) spatial query</td><td>3D spatial queries, physics broadphase</td><td>Custom implementation</td></tr>
+          <tr><td>Graph (Adjacency List)</td><td>O(V+E) traversal</td><td>Navmesh connectivity, quest dependency</td><td>Custom / NodeList</td></tr>
+          <tr><td>Disjoint Set (Union-Find)</td><td>O(α(n)) nearly O(1)</td><td>Maze generation, region connectivity</td><td>Custom implementation</td></tr>
+          <tr><td>Ring Buffer</td><td>O(1) all ops</td><td>Audio sample buffers, replay systems</td><td>Custom / ArraySegment</td></tr>
+          <tr><td>Sparse Matrix</td><td>Depends</td><td>Large tile maps, voxel worlds</td><td>Custom / Dictionary</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label">Algorithm Modules</div>
+    <div class="module-grid">
+      <div class="module">
+        <span class="module-icon">🔀</span>
+        <div class="module-name">Sorting &amp; Searching <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Essential for render ordering, AI priority, and leaderboard systems.</p>
+        <ul class="topic-list">
+          <li>QuickSort, MergeSort, HeapSort — when to use each</li>
+          <li>Radix sort for integers (depth sorting in 2D games)</li>
+          <li>Timsort and why C# uses it for List.Sort()</li>
+          <li>Binary search on sorted arrays</li>
+          <li>Order statistics (kth smallest for LOD)</li>
+          <li>Partial sort — top-N enemies by threat level</li>
+          <li>Stable vs unstable sorts for layered rendering</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🗺</span>
+        <div class="module-name">Pathfinding Algorithms <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">The most critical algorithms for game AI movement.</p>
+        <ul class="topic-list">
+          <li>BFS for shortest path on unweighted grids</li>
+          <li>Dijkstra's algorithm for weighted graphs</li>
+          <li>A* — heuristics (Manhattan, Euclidean, Octile)</li>
+          <li>Weighted A* and greedy best-first comparison</li>
+          <li>Jump Point Search for uniform-cost grids</li>
+          <li>Theta* for any-angle pathfinding</li>
+          <li>Flow field pathfinding for RTS crowd movement</li>
+          <li>Hierarchical pathfinding for large worlds</li>
+          <li>Path smoothing: funnel algorithm, Beziér</li>
+          <li>Dynamic obstacle avoidance (RVO/ORCA)</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🌐</span>
+        <div class="module-name">Spatial Data Structures <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Efficient spatial queries are what separates fast games from slow ones.</p>
+        <ul class="topic-list">
+          <li>Quadtree: insertion, deletion, range queries</li>
+          <li>Octree for 3D: splitting strategies</li>
+          <li>KD-tree for nearest-neighbor queries</li>
+          <li>BVH (Bounding Volume Hierarchy) for ray casting</li>
+          <li>Spatial hashing for dynamic objects</li>
+          <li>R-tree for rectangle overlap queries</li>
+          <li>Frustum culling math and implementation</li>
+          <li>BSP trees for indoor level geometry</li>
+          <li>Sweep and prune broad phase</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🎲</span>
+        <div class="module-name">Procedural Generation <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Algorithmic content generation for infinite or emergent game worlds.</p>
+        <ul class="topic-list">
+          <li>Noise functions: Perlin, Simplex, Value, Voronoi</li>
+          <li>Fractal Brownian Motion (fBm) for terrain</li>
+          <li>Diamond-Square algorithm for heightmaps</li>
+          <li>BSP dungeon generation</li>
+          <li>Cellular Automata for cave systems</li>
+          <li>Drunkard's Walk and room placement</li>
+          <li>Wave Function Collapse (WFC) algorithm</li>
+          <li>L-Systems for organic structures and flora</li>
+          <li>Delaunay triangulation for navmesh generation</li>
+          <li>Seeded RNG with PCG / Xoshiro256**</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🤖</span>
+        <div class="module-name">Game AI Foundations <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Classic and modern AI techniques for believable NPC behavior.</p>
+        <ul class="topic-list">
+          <li>Finite State Machines (FSM) — design and implementation</li>
+          <li>Hierarchical FSM (HFSM) and UML state charts</li>
+          <li>Behavior Trees: sequence, selector, parallel nodes</li>
+          <li>Utility AI — scoring systems for decision making</li>
+          <li>GOAP (Goal Oriented Action Planning)</li>
+          <li>Influence maps and tactical AI</li>
+          <li>Steering behaviors: seek, flee, arrive, pursue, flock</li>
+          <li>Reynolds flocking (separation, alignment, cohesion)</li>
+          <li>Minimax algorithm with alpha-beta pruning</li>
+          <li>Monte Carlo Tree Search (MCTS) for games</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">📐</span>
+        <div class="module-name">Computational Geometry <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Geometry algorithms powering collision, visibility, and mesh operations.</p>
+        <ul class="topic-list">
+          <li>GJK collision detection algorithm</li>
+          <li>EPA (Expanding Polytope Algorithm)</li>
+          <li>Separating Axis Theorem (SAT)</li>
+          <li>Convex hull: Graham scan, Jarvis march</li>
+          <li>Polygon triangulation for mesh generation</li>
+          <li>Ray-triangle intersection (Möller–Trumbore)</li>
+          <li>Line-line and line-plane intersections</li>
+          <li>Minkowski sum for obstacle dilation</li>
+          <li>Visibility graph for 2D pathfinding</li>
+          <li>Ear-clipping triangulation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Algorithm Projects</div>
+    <div class="project-row">
+      <div class="project-card">
+        <div class="project-num">PROJECT 02.A</div>
+        <div class="project-name">Pathfinding Visualizer</div>
+        <p class="project-desc">Interactive console/WinForms grid app showing BFS, Dijkstra, A*, and JPS side-by-side with performance metrics, heuristic comparison, and obstacle editing.</p>
+        <div class="project-tags"><span class="tag">A*</span><span class="tag">JPS</span><span class="tag">Visualization</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT 02.B</div>
+        <div class="project-name">Procedural Dungeon Generator</div>
+        <p class="project-desc">Implement 4+ generation algorithms (BSP, CA, WFC, drunkard's walk) with comparison mode. Generates navigable dungeon with navmesh and pathfindable regions.</p>
+        <div class="project-tags"><span class="tag">WFC</span><span class="tag">BSP</span><span class="tag">Noise</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT 02.C</div>
+        <div class="project-name">AI Behavior Demo</div>
+        <p class="project-desc">Console-rendered battlefield with FSM, Behavior Tree, and GOAP agents competing. Visualizes state transitions, decision scores, and plan steps in real-time.</p>
+        <div class="project-tags"><span class="tag">FSM</span><span class="tag">BT</span><span class="tag">GOAP</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT 02.D</div>
+        <div class="project-name">Physics Simulation Engine</div>
+        <p class="project-desc">2D rigid body physics: AABB + circle collision, broadphase with spatial hashing, impulse resolution, friction, restitution, and sleeping bodies. No engine.</p>
+        <div class="project-tags"><span class="tag">Physics</span><span class="tag">GJK</span><span class="tag">SAT</span></div>
+      </div>
+    </div>
+
+    <div class="checkpoint">
+      <div class="checkpoint-title">📋 Phase 2 Completion Checklist</div>
+      <ul class="checkpoint-list">
+        <li>Implements A* with multiple heuristics from memory</li>
+        <li>Can explain and implement a Quadtree</li>
+        <li>Builds working Behavior Tree framework</li>
+        <li>Understands WFC and implements a variant</li>
+        <li>Can write GJK collision detection</li>
+        <li>Knows time/space complexity of all core structures</li>
+        <li>Has implemented a flow field pathfinder</li>
+        <li>Can generate Perlin noise terrain from scratch</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase-divider">Engine Fundamentals — Unity</div>
+
+  <!-- ═══════════════════════════════════════════════
+       PHASE 3 — UNITY CORE
+  ═══════════════════════════════════════════════ -->
+  <div id="phase3" class="phase p3">
+    <div class="phase-num">03</div>
+    <div class="phase-header">
+      <div></div>
+      <div class="phase-meta">
+        <div class="phase-badge">Phase 03 · Unity Engine</div>
+        <h2 class="phase-title">Unity Core Systems &amp; Game Architecture</h2>
+        <p class="phase-desc">Master Unity's fundamental systems deeply — not just "how to use" but how and why they work. Build production-quality 2D and 3D games with proper architecture, performance profiling, and shader fundamentals.</p>
+        <p class="phase-duration">⏱ Estimated Duration: 4–5 months · ~16–20 weeks</p>
+      </div>
+    </div>
+
+    <div class="section-label">Engine Architecture Modules</div>
+    <div class="module-grid">
+      <div class="module">
+        <span class="module-icon">🔩</span>
+        <div class="module-name">Unity Architecture Deep Dive <span class="level-badge level-beginner">Beginner</span></div>
+        <p class="module-desc">Understand what Unity does under the hood so you can work with it, not against it.</p>
+        <ul class="topic-list">
+          <li>Unity's execution order: Awake, OnEnable, Start, FixedUpdate, Update, LateUpdate</li>
+          <li>GameObject/Component model vs ECS conceptually</li>
+          <li>Transform hierarchy and local vs world space</li>
+          <li>Prefab system: variants, nested, runtime instantiation</li>
+          <li>Asset database and AssetBundle pipeline overview</li>
+          <li>Scene management: additive loading, async scene ops</li>
+          <li>Unity's serialization system: [SerializeField], ScriptableObjects</li>
+          <li>Unity events vs C# events — tradeoffs</li>
+          <li>Layer system, tags, and physics matrix</li>
+          <li>Player settings, build targets, and platform defines</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🎯</span>
+        <div class="module-name">Physics System <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Physics-driven gameplay and proper collision architecture.</p>
+        <ul class="topic-list">
+          <li>Rigidbody: mass, drag, angular drag, interpolation modes</li>
+          <li>Collider types: Box, Sphere, Capsule, Mesh, Compound</li>
+          <li>Triggers vs Colliders: OnTrigger vs OnCollision callbacks</li>
+          <li>Physics materials: friction, bounciness combinations</li>
+          <li>Joints: Fixed, Hinge, Spring, Character, Configurable</li>
+          <li>Raycasting: Physics.Raycast, RaycastAll, SphereCast</li>
+          <li>LayerMask bit manipulation for filtered queries</li>
+          <li>FixedUpdate timing, Physics.simulationMode</li>
+          <li>Physics2D vs Physics3D: separate simulation worlds</li>
+          <li>Continuous collision detection (CCD) for fast objects</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🎬</span>
+        <div class="module-name">Animation Systems <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Animator, Timeline, and procedural animation for responsive characters.</p>
+        <ul class="topic-list">
+          <li>Animator Controller: states, transitions, conditions</li>
+          <li>Animation blend trees: 1D, 2D freeform directional</li>
+          <li>Animation layers: additive, override, with masking</li>
+          <li>Avatar masking and humanoid rig retargeting</li>
+          <li>Root motion: Apply Root Motion, OnAnimatorMove</li>
+          <li>Inverse Kinematics: IK pass, OnAnimatorIK callback</li>
+          <li>Animation Rigging package: two-bone IK, aim constraints</li>
+          <li>Timeline: animation tracks, signal emitters, cinemachine</li>
+          <li>Animator.CrossFade and direct state API usage</li>
+          <li>Procedural animation: spring systems, secondary motion</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">💡</span>
+        <div class="module-name">Rendering &amp; Lighting <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">URP/HDRP pipelines, lighting models, and visual optimization.</p>
+        <ul class="topic-list">
+          <li>Built-in vs URP vs HDRP — choosing the right pipeline</li>
+          <li>URP Forward vs Deferred rendering path</li>
+          <li>Light types: Directional, Point, Spot, Area, Emissive</li>
+          <li>Baked vs real-time lighting and mixed mode</li>
+          <li>Lightmapping: UV2 layout, light probe groups</li>
+          <li>Reflection probes: baked, real-time, blending</li>
+          <li>Shadow cascades, shadow bias, Peter Panning</li>
+          <li>LOD Groups: LODGroup component, cross-fading</li>
+          <li>Occlusion culling bake and dynamic objects</li>
+          <li>Post-processing stack: Bloom, DoF, SSAO, Color Grading</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🖥</span>
+        <div class="module-name">UI Systems (uGUI &amp; UI Toolkit) <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Building responsive, localization-ready, performant game UI.</p>
+        <ul class="topic-list">
+          <li>Canvas modes: Screen Space Overlay/Camera, World Space</li>
+          <li>RectTransform: anchors, pivots, stretch modes</li>
+          <li>Layout groups: Horizontal, Vertical, Grid</li>
+          <li>Content Size Fitter and Aspect Ratio Fitter</li>
+          <li>Event System: IPointerClickHandler, IBeginDragHandler</li>
+          <li>ScrollRect with virtual list for large datasets</li>
+          <li>UI Toolkit (UIElements): UXML, USS, visual tree</li>
+          <li>TextMeshPro: SDF rendering, rich text, localization</li>
+          <li>UI performance: canvas batching, overdraw, dirty flags</li>
+          <li>Safe area for mobile notch/punch-hole handling</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🔊</span>
+        <div class="module-name">Audio Architecture <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Professional game audio with spatialization and dynamic mixing.</p>
+        <ul class="topic-list">
+          <li>AudioSource, AudioClip, AudioListener — full pipeline</li>
+          <li>AudioMixer: groups, sends, effects, snapshots</li>
+          <li>Mixer snapshot transitions for dynamic music</li>
+          <li>3D audio: spatial blend, Doppler, rolloff curves</li>
+          <li>FMOD vs Wwise vs Unity native — when to choose</li>
+          <li>FMOD Studio integration: events, parameters, banks</li>
+          <li>Music layering: stems, vertical re-orchestration</li>
+          <li>Adaptive audio: interactive music systems</li>
+          <li>Audio performance: audio thread, preloading, streaming</li>
+          <li>Occlusion and reverb zone architecture</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">📦</span>
+        <div class="module-name">Input System (New) <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Device-agnostic input with rebinding and multi-player support.</p>
+        <ul class="topic-list">
+          <li>Actions, Action Maps, Input Asset structure</li>
+          <li>PlayerInput component — direct/broadcast/invoke events</li>
+          <li>Input Action References in ScriptableObjects</li>
+          <li>Composite bindings: WASD, Dpad, Stick override</li>
+          <li>Control schemes for keyboard/gamepad switching</li>
+          <li>Runtime rebinding and rebind UI implementation</li>
+          <li>Local multiplayer with PlayerInputManager</li>
+          <li>Touch input: TouchPhase, Pointer actions</li>
+          <li>Gyroscope and accelerometer on mobile</li>
+          <li>Input buffering for responsive action games</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">📈</span>
+        <div class="module-name">Performance &amp; Profiling <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Identifying and eliminating performance bottlenecks systematically.</p>
+        <ul class="topic-list">
+          <li>Unity Profiler: CPU, GPU, Memory, Audio tracks</li>
+          <li>Frame Debugger for render call analysis</li>
+          <li>Memory Profiler: snapshots, object references, leaks</li>
+          <li>Draw call batching: static, dynamic, GPU instancing</li>
+          <li>SRP Batcher and batching requirements</li>
+          <li>Profiling on device: ADB logcat, iOS Instruments</li>
+          <li>GC allocation elimination: caching, pooling strategies</li>
+          <li>Job System + Burst Compiler for CPU parallelism</li>
+          <li>Texture compression: ASTC, DXT1/5, ETC2 — by platform</li>
+          <li>Asset optimization pipeline and build reporting</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Shader Programming — HLSL/ShaderLab</div>
+    <div class="module-grid">
+      <div class="module">
+        <span class="module-icon">✨</span>
+        <div class="module-name">Shader Fundamentals <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Understanding the GPU pipeline and writing your first custom shaders.</p>
+        <ul class="topic-list">
+          <li>GPU pipeline: vertex → rasterization → fragment</li>
+          <li>ShaderLab syntax: Properties, SubShader, Pass</li>
+          <li>Vertex shader: transforming positions, passing varyings</li>
+          <li>Fragment shader: texture sampling, color output</li>
+          <li>Shader keywords and multi-compile variants</li>
+          <li>Blending modes: Alpha, Additive, Multiply</li>
+          <li>Depth writing and ZTest modes</li>
+          <li>Stencil buffer operations</li>
+          <li>HLSL built-in functions: lerp, saturate, pow, frac</li>
+          <li>PBR inputs: albedo, metallic, smoothness, normal</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🌊</span>
+        <div class="module-name">Shader Graph &amp; VFX Graph <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Visual shader authoring and GPU particle systems at scale.</p>
+        <ul class="topic-list">
+          <li>Shader Graph nodes: UV, Texture Sample, Fresnel</li>
+          <li>Custom function nodes for complex HLSL</li>
+          <li>Sub-graphs for reusable shader logic</li>
+          <li>URP Lit vs Unlit master stacks</li>
+          <li>Vertex displacement for water, wind, cloth</li>
+          <li>VFX Graph: spawn contexts, particle attributes</li>
+          <li>VFX output contexts: quad, mesh, HDRP lit</li>
+          <li>GPU event system for bursts, trails, collisions</li>
+          <li>VFX property binding from C# script</li>
+          <li>Optimizing VFX: capacity limits, LOD, culling</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Unity Game Projects</div>
+    <div class="project-row">
+      <div class="project-card">
+        <div class="project-num">PROJECT 03.A</div>
+        <div class="project-name">2D Metroidvania</div>
+        <p class="project-desc">Complete 2D platformer with: custom character controller (not using built-in), coyote time, jump buffering, abilities system, 5+ room types, animated boss, save system, and localization.</p>
+        <div class="project-tags"><span class="tag">2D Physics</span><span class="tag">Animation</span><span class="tag">Tilemap</span><span class="tag">Save</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT 03.B</div>
+        <div class="project-name">3D Third-Person Action</div>
+        <p class="project-desc">TPS with NavMesh enemies, Cinemachine camera rig, combo system, hitboxes/hurtboxes, procedural footstep IK, spell effects using VFX Graph, and FMOD audio integration.</p>
+        <div class="project-tags"><span class="tag">NavMesh</span><span class="tag">Cinemachine</span><span class="tag">IK</span><span class="tag">FMOD</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT 03.C</div>
+        <div class="project-name">Shader Showcase Scene</div>
+        <p class="project-desc">Dedicated scene demonstrating: water shader, holographic UI, dissolve effect, cel-shading, Fresnel rim light, and one fully custom PBR material. All documented with parameter controls.</p>
+        <div class="project-tags"><span class="tag">HLSL</span><span class="tag">Shader Graph</span><span class="tag">VFX</span></div>
+      </div>
+    </div>
+
+    <div class="checkpoint">
+      <div class="checkpoint-title">📋 Phase 3 Completion Checklist</div>
+      <ul class="checkpoint-list">
+        <li>Has shipped two complete games (2D and 3D)</li>
+        <li>Can read and interpret Unity Profiler output</li>
+        <li>Writes ShaderLab HLSL without Shader Graph</li>
+        <li>Uses URP correctly with proper batching</li>
+        <li>Implements FSM/BT AI in Unity with NavMesh</li>
+        <li>Builds working asynchronous scene loading</li>
+        <li>Has integrated FMOD or Wwise</li>
+        <li>Understands all animation system layers</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase-divider">3D Art Pipeline — Blender</div>
+
+  <!-- ═══════════════════════════════════════════════
+       PHASE 4 — BLENDER & 3D ART
+  ═══════════════════════════════════════════════ -->
+  <div id="phase4" class="phase p4">
+    <div class="phase-num">04</div>
+    <div class="phase-header">
+      <div></div>
+      <div class="phase-meta">
+        <div class="phase-badge">Phase 04 · Blender &amp; Art Pipeline</div>
+        <h2 class="phase-title">Blender, 3D Art &amp; Game Asset Production</h2>
+        <p class="phase-desc">Professional game asset creation from concept to engine-ready. Covers the complete art pipeline: modeling, sculpting, retopology, UV unwrapping, PBR texturing, rigging, animation, and export to Unity.</p>
+        <p class="phase-duration">⏱ Estimated Duration: 3–4 months · ~12–16 weeks</p>
+      </div>
+    </div>
+
+    <div class="section-label">Modeling &amp; Mesh Work</div>
+    <div class="module-grid">
+      <div class="module">
+        <span class="module-icon">🧱</span>
+        <div class="module-name">Blender Fundamentals <span class="level-badge level-beginner">Beginner</span></div>
+        <p class="module-desc">Viewport navigation, hotkeys, and the core modeling workflow.</p>
+        <ul class="topic-list">
+          <li>Interface: viewport, properties, outliner, shader editor</li>
+          <li>Object mode vs Edit mode — critical distinction</li>
+          <li>Mesh primitives and boolean operations</li>
+          <li>Core tools: extrude, inset, loop cut, bevel, bridge</li>
+          <li>Modifiers: Subdivision, Mirror, Array, Solidify, Bevel</li>
+          <li>N-gons vs quads vs tris — why quads matter</li>
+          <li>Edge flow for clean topology</li>
+          <li>Proportional editing for organic shapes</li>
+          <li>Snapping: grid, face, edge, vertex</li>
+          <li>Measurements and scale normalization (Apply Scale!)</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🎨</span>
+        <div class="module-name">High-Poly Sculpting <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Digital sculpting for AAA character and prop detail work.</p>
+        <ul class="topic-list">
+          <li>Sculpt mode brushes: Draw, Clay Strips, Inflate, Crease</li>
+          <li>Dynamic topology (Dyntopo) vs Multires sculpting</li>
+          <li>Remesh: Voxel Remesh, Quad Remesh</li>
+          <li>Masking and face sets for isolated sculpting</li>
+          <li>Cloth simulation for detail sculpting</li>
+          <li>Trim sheets from sculpted silhouettes</li>
+          <li>Alpha brushes: custom brush textures</li>
+          <li>Pose brush for rapid silhouette iteration</li>
+          <li>Sculpting workflow: blockout → medium detail → fine detail</li>
+          <li>PBR material preview while sculpting</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🔄</span>
+        <div class="module-name">Retopology &amp; Optimization <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Converting high-poly sculpts to game-ready low-poly meshes.</p>
+        <ul class="topic-list">
+          <li>Manual retopology with snap to surface</li>
+          <li>RetopoFlow add-on workflow</li>
+          <li>Target poly counts by asset type (character, prop, environment)</li>
+          <li>Edge loop placement for deformable joints</li>
+          <li>Polygon budget planning for mobile vs console</li>
+          <li>LOD mesh creation (LOD0–LOD3 + billboard)</li>
+          <li>Decimate modifier for rapid LOD generation</li>
+          <li>Hard surface retopology patterns</li>
+          <li>Mesh validation: non-manifold, flipped normals, doubles</li>
+          <li>Exporting FBX with correct axis and scale</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">📏</span>
+        <div class="module-name">UV Unwrapping &amp; Texel Density <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Clean UV layouts for optimal texture quality and bake accuracy.</p>
+        <ul class="topic-list">
+          <li>Seam placement philosophy: hiding seams, following edges</li>
+          <li>Unwrap methods: Smart UV, Follow Active Quads, Project</li>
+          <li>UV editor: packing, rotating, scaling islands</li>
+          <li>Texel density: maintaining consistent density across model</li>
+          <li>UDIM tiles for hero asset texture sets</li>
+          <li>Overlapping UVs: when to overlap vs when not to</li>
+          <li>UV channel 2 for lightmaps in Unity</li>
+          <li>UV Packmaster or UVpacker for automatic packing</li>
+          <li>Texture atlas creation for batching</li>
+          <li>UV stretching detection and correction</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🖌</span>
+        <div class="module-name">PBR Texturing — Substance 3D Painter <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Industry-standard PBR texturing workflow for production assets.</p>
+        <ul class="topic-list">
+          <li>PBR metallic-roughness vs specular-glossiness workflows</li>
+          <li>Normal map baking: high-to-low with cage projection</li>
+          <li>AO, curvature, thickness, position bakes</li>
+          <li>Substance Painter: layers, masks, generators, filters</li>
+          <li>Procedural wear: edge wear, dirt in crevices, grunge</li>
+          <li>Smart materials and smart masks library</li>
+          <li>Decals and text/logo application</li>
+          <li>Exporting texture sets: Unity URP, Unreal, custom</li>
+          <li>Substance Designer: procedural material creation</li>
+          <li>Hand-painted textures for stylized games</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">💀</span>
+        <div class="module-name">Rigging &amp; Skinning <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Bone structures and weight painting for animation-ready characters.</p>
+        <ul class="topic-list">
+          <li>Armature creation: bone rolls, parent-child hierarchy</li>
+          <li>Humanoid rig structure for Unity avatar</li>
+          <li>IK vs FK: pole targets, IK chains, foot roll rig</li>
+          <li>Control rig vs deform rig separation</li>
+          <li>Automatic weights vs manual weight painting</li>
+          <li>Weight painting workflow: mirror, smooth, gradient</li>
+          <li>Shape keys (blend shapes) for facial animation</li>
+          <li>Corrective shape keys for deformation artifacts</li>
+          <li>Exporting with armature: FBX baked animation</li>
+          <li>Unity mecanim humanoid: T-pose, avatar configuration</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Environment Art &amp; Technical Art</div>
+    <div class="module-grid">
+      <div class="module">
+        <span class="module-icon">🌳</span>
+        <div class="module-name">Environment &amp; Level Art <span class="level-badge level-intermediate">Intermediate</span></div>
+        <p class="module-desc">Modular environment kit creation and scene composition.</p>
+        <ul class="topic-list">
+          <li>Modular kit design: grids, snapping rules, tile philosophy</li>
+          <li>Trim sheets: maximum texture reuse</li>
+          <li>Tiling vs unique textures strategy</li>
+          <li>Hero prop vs kit prop vs background asset</li>
+          <li>Foliage: billboards, wind shader, LOD cross-fade</li>
+          <li>Terrain tools: sculpt, paint, grass, trees</li>
+          <li>Lightmap UV workflow for static environments</li>
+          <li>Level art dressing: scatter, instance tools</li>
+          <li>Vertex color painting for blending and effects</li>
+          <li>Distance field ambient occlusion for large scenes</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">⚙</span>
+        <div class="module-name">Technical Art Pipeline <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Bridging art and engineering with automation and optimization tools.</p>
+        <ul class="topic-list">
+          <li>Blender Python scripting for batch asset processing</li>
+          <li>Custom operators and panels in Blender</li>
+          <li>Unity AssetPostprocessor for automated import settings</li>
+          <li>Texture streaming: mip levels and streaming settings</li>
+          <li>Asset validation pipeline: naming conventions, checkers</li>
+          <li>Automated LOD generation scripts</li>
+          <li>Normal map encoding: DirectX vs OpenGL handedness</li>
+          <li>Channel packing textures (Metallic-AO-Roughness)</li>
+          <li>Mesh LOD generation with automated LOD chain</li>
+          <li>Perforce/Plastic SCM for binary asset version control</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Art Projects</div>
+    <div class="project-row">
+      <div class="project-card">
+        <div class="project-num">PROJECT 04.A</div>
+        <div class="project-name">Hero Character — Full Pipeline</div>
+        <p class="project-desc">Sculpt → retopo → UV → Substance texture → rig → animate → Unity integration. Delivered with 4K textures, 3 LODs, idle/walk/run/attack clips, and blend shapes for face.</p>
+        <div class="project-tags"><span class="tag">Sculpt</span><span class="tag">Retopo</span><span class="tag">Rig</span><span class="tag">Substance</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT 04.B</div>
+        <div class="project-name">Modular Dungeon Kit</div>
+        <p class="project-desc">40+ modular pieces: walls, floors, arches, pillars, stairs, doors. Trim sheet texture set. Full LOD chain. Assembled into a playable level in Unity with baked lighting.</p>
+        <div class="project-tags"><span class="tag">Modular</span><span class="tag">Trim Sheets</span><span class="tag">Lightmap</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT 04.C</div>
+        <div class="project-name">Python Asset Processor</div>
+        <p class="project-desc">Blender Python script that batch exports assets, applies LOD decimation, packs texture channels, renames to convention, and generates a JSON manifest for the Unity importer.</p>
+        <div class="project-tags"><span class="tag">Python</span><span class="tag">Automation</span><span class="tag">Pipeline</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-divider">Advanced Systems Engineering</div>
+
+  <!-- ═══════════════════════════════════════════════
+       PHASE 5 — ADVANCED UNITY SYSTEMS
+  ═══════════════════════════════════════════════ -->
+  <div id="phase5" class="phase p5">
+    <div class="phase-num">05</div>
+    <div class="phase-header">
+      <div></div>
+      <div class="phase-meta">
+        <div class="phase-badge">Phase 05 · Advanced Unity</div>
+        <h2 class="phase-title">Advanced Unity Systems &amp; Multiplayer</h2>
+        <p class="phase-desc">Professional-grade game systems: DOTS/ECS for high-performance simulation, multiplayer networking, procedural generation at scale, runtime tools, and the full asset streaming pipeline.</p>
+        <p class="phase-duration">⏱ Estimated Duration: 4–5 months · ~16–20 weeks</p>
+      </div>
+    </div>
+
+    <div class="section-label">High-Performance Systems</div>
+    <div class="module-grid">
+      <div class="module">
+        <span class="module-icon">⚡</span>
+        <div class="module-name">DOTS — Data Oriented Tech Stack <span class="level-badge level-expert">Expert</span></div>
+        <p class="module-desc">Unity's high-performance multithreaded architecture for simulation-heavy games.</p>
+        <ul class="topic-list">
+          <li>ECS concepts: Entity, Component (IComponentData), System</li>
+          <li>Archetypes, Chunks, and memory layout</li>
+          <li>World, EntityManager, EntityCommandBuffer</li>
+          <li>ISystem vs SystemBase performance differences</li>
+          <li>Entities.ForEach vs IJobChunk vs IJobEntity</li>
+          <li>Job System: IJob, IJobParallelFor, scheduling chains</li>
+          <li>Burst Compiler: NativeArray, NativeList, math library</li>
+          <li>Native collections: NativeHashMap, NativeQueue</li>
+          <li>SystemGroup ordering and simulation groups</li>
+          <li>Hybrid ECS: connecting ECS entities to GameObject world</li>
+          <li>DOTS Physics (Havok/Unity Physics) integration</li>
+          <li>Entities Graphics: hybrid renderer for ECS rendering</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🌍</span>
+        <div class="module-name">Multiplayer Networking <span class="level-badge level-expert">Expert</span></div>
+        <p class="module-desc">Building robust, cheat-resistant real-time multiplayer games.</p>
+        <ul class="topic-list">
+          <li>Network topologies: peer-to-peer vs client-server</li>
+          <li>Netcode for GameObjects (NGO): NetworkObject, NetworkBehaviour</li>
+          <li>NetworkVariable&lt;T&gt;: ownership, permissions, dirty tracking</li>
+          <li>RPCs: ServerRpc, ClientRpc — when to use each</li>
+          <li>Client-side prediction: implement for fast-paced character</li>
+          <li>Server reconciliation and snapshot interpolation</li>
+          <li>Lag compensation for hit registration</li>
+          <li>Unity Transport: reliability, ordering, fragmentation</li>
+          <li>Relay and Lobby services for matchmaking</li>
+          <li>Interest management: spatial and area-of-interest</li>
+          <li>Anti-cheat fundamentals: server authority, validation</li>
+          <li>Deterministic simulation for RTS games</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">📡</span>
+        <div class="module-name">Addressables &amp; Asset Streaming <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Live games asset management, DLC, and hot loading pipelines.</p>
+        <ul class="topic-list">
+          <li>Addressable Asset System: groups, labels, keys</li>
+          <li>Synchronous vs async asset loading patterns</li>
+          <li>Asset references vs string keys — tradeoffs</li>
+          <li>Memory management: ReleaseInstance, AsyncOperationHandle</li>
+          <li>Remote catalogs for live game asset updates</li>
+          <li>Content Delivery Network (CDN) integration</li>
+          <li>Delta patching and differential downloads</li>
+          <li>Build pipeline for Addressables: local vs remote groups</li>
+          <li>Dependency graph and bundle size optimization</li>
+          <li>Loading screen management with progress reporting</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🧩</span>
+        <div class="module-name">Game Systems Design <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Architecting major game systems that are maintainable at scale.</p>
+        <ul class="topic-list">
+          <li>ScriptableObject-based item/ability system</li>
+          <li>Inventory: generics, weight, stacking, persistence</li>
+          <li>Quest system: prerequisites, state, auto-complete</li>
+          <li>Dialogue system: branching, conditions, variables</li>
+          <li>Achievement system with offline sync</li>
+          <li>Save system: binary serialization, encryption, versioning</li>
+          <li>Localization: string tables, plural forms, RTL support</li>
+          <li>Analytics integration: custom event schema</li>
+          <li>A/B testing framework for balancing</li>
+          <li>Feature flags for staged rollouts</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🔬</span>
+        <div class="module-name">Runtime Tools &amp; Debug Systems <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Developer tools that accelerate iteration and live debugging.</p>
+        <ul class="topic-list">
+          <li>Custom Editor windows with IMGUI / UI Toolkit</li>
+          <li>PropertyDrawers for ScriptableObject editing</li>
+          <li>Custom Handles for scene-view gizmos</li>
+          <li>In-game console / command palette</li>
+          <li>Cheat menu system for QA and testing</li>
+          <li>Debug overlay: FPS, frame time, GC alloc HUD</li>
+          <li>Screenshot and recording tool</li>
+          <li>Timeline event markers for cutscene debugging</li>
+          <li>Unit testing with Unity Test Framework (NUnit)</li>
+          <li>Play mode tests and edit mode tests</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🧠</span>
+        <div class="module-name">ML-Agents &amp; Advanced AI <span class="level-badge level-expert">Expert</span></div>
+        <p class="module-desc">Machine learning for game AI, procedural content, and analytics.</p>
+        <ul class="topic-list">
+          <li>ML-Agents: agents, observations, actions, rewards</li>
+          <li>PPO training loop: environment reset, episode length</li>
+          <li>Curriculum learning for difficulty scaling</li>
+          <li>Imitation learning from player demonstrations</li>
+          <li>Cooperative and competitive multi-agent training</li>
+          <li>Neural network inference at runtime in Unity</li>
+          <li>Procedural level generation with RL agents</li>
+          <li>Player modeling for adaptive difficulty</li>
+          <li>Generative AI integration: LLM NPC dialogue</li>
+          <li>Stable Diffusion for texture concept generation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Advanced Projects</div>
+    <div class="project-row">
+      <div class="project-card">
+        <div class="project-num">PROJECT 05.A</div>
+        <div class="project-name">DOTS RTS Game</div>
+        <p class="project-desc">Real-time strategy with 10,000+ unit simulation using full DOTS stack: ECS, Job System, Burst, DOTS Physics, flow field movement, and Entities Graphics rendering.</p>
+        <div class="project-tags"><span class="tag">ECS</span><span class="tag">Jobs</span><span class="tag">Burst</span><span class="tag">FlowField</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT 05.B</div>
+        <div class="project-name">Multiplayer FPS Prototype</div>
+        <p class="project-desc">4-player FPS with NGO, client-side prediction, lag compensation hitboxes, relay/lobby matchmaking, weapon netcode, and basic anti-cheat server validation.</p>
+        <div class="project-tags"><span class="tag">NGO</span><span class="tag">Prediction</span><span class="tag">Relay</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT 05.C</div>
+        <div class="project-name">Procedural Open World</div>
+        <p class="project-desc">Streaming open world with chunk-based loading via Addressables, runtime WFC level generation, dynamic day/night, weather system, and AI ecology simulation.</p>
+        <div class="project-tags"><span class="tag">Addressables</span><span class="tag">Streaming</span><span class="tag">WFC</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">PROJECT 05.D</div>
+        <div class="project-name">ML-Agents Training Env</div>
+        <p class="project-desc">Train an FPS bot with PPO to compete against a human player. Includes curriculum learning pipeline, behavior cloning from human demos, Tensorboard monitoring.</p>
+        <div class="project-tags"><span class="tag">RL</span><span class="tag">PPO</span><span class="tag">Curriculum</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase-divider">Professional Studio &amp; Enterprise Pipeline</div>
+
+  <!-- ═══════════════════════════════════════════════
+       PHASE 6 — ENTERPRISE PIPELINE
+  ═══════════════════════════════════════════════ -->
+  <div id="phase6" class="phase p6">
+    <div class="phase-num">06</div>
+    <div class="phase-header">
+      <div></div>
+      <div class="phase-meta">
+        <div class="phase-badge">Phase 06 · Enterprise</div>
+        <h2 class="phase-title">Enterprise Pipeline, DevOps &amp; Live Game Operations</h2>
+        <p class="phase-desc">Ship and sustain a live game as a professional studio. CI/CD pipelines, live operations, platform certification, cloud backends, analytics at scale, economy design, and the full agile production workflow.</p>
+        <p class="phase-duration">⏱ Estimated Duration: 3–4 months · ~12–16 weeks</p>
+      </div>
+    </div>
+
+    <div class="section-label">DevOps &amp; Build Pipeline</div>
+    <div class="module-grid">
+      <div class="module">
+        <span class="module-icon">🏭</span>
+        <div class="module-name">CI/CD for Game Development <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Automated build, test, and distribution pipeline for professional teams.</p>
+        <ul class="topic-list">
+          <li>Unity Cloud Build vs GitHub Actions vs Jenkins</li>
+          <li>Automated build triggers on commit and PR</li>
+          <li>Build matrix: iOS, Android, PC, Switch targets</li>
+          <li>Unity Test Framework in CI: headless Play mode tests</li>
+          <li>Artifact staging and download for QA</li>
+          <li>Fastlane for iOS/Android store submission</li>
+          <li>Incremental builds and build caching</li>
+          <li>Code signing automation: certificate management</li>
+          <li>Slack/Discord notifications on build results</li>
+          <li>Build number stamping and version management</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🌿</span>
+        <div class="module-name">Version Control &amp; Asset Management <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Managing code and binary assets at team scale.</p>
+        <ul class="topic-list">
+          <li>Git branching: Gitflow vs trunk-based development</li>
+          <li>Git LFS for binary assets: setup, tracking, locking</li>
+          <li>Plastic SCM (Unity DevOps): workspaces, branches</li>
+          <li>Perforce Helix: depot structure, streams, changelists</li>
+          <li>Merge strategies for Unity scene/prefab YAML</li>
+          <li>Smart Merge (UnityYAMLMerge) configuration</li>
+          <li>Asset lock/exclusive checkout workflow</li>
+          <li>Branching for live game hotfixes vs features</li>
+          <li>Code review process: PR templates, review standards</li>
+          <li>Release tagging and changelog automation</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">☁</span>
+        <div class="module-name">Cloud Backend &amp; Services <span class="level-badge level-advanced">Advanced</span></div>
+        <p class="module-desc">Scalable backend infrastructure for live games and services.</p>
+        <ul class="topic-list">
+          <li>Unity Gaming Services (UGS) full stack integration</li>
+          <li>Player Authentication: anonymous, Steam, Apple, Google</li>
+          <li>Cloud Save: player data serialization and sync</li>
+          <li>Economy: virtual currencies, real money, catalog</li>
+          <li>Remote Config: live variable updates without builds</li>
+          <li>Game Override / A-B testing with player segments</li>
+          <li>Cloud Code: serverless C# functions</li>
+          <li>Multiplayer Services: matchmaking rules, queues</li>
+          <li>Leaderboards: real-time and archived seasons</li>
+          <li>Push notifications: FCM/APNs integration</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">📊</span>
+        <div class="module-name">Analytics, Telemetry &amp; LiveOps <span class="level-badge level-expert">Expert</span></div>
+        <p class="module-desc">Data-driven game design and live operations management.</p>
+        <ul class="topic-list">
+          <li>Custom analytics event schema design</li>
+          <li>Funnel analysis: onboarding, tutorial, first session</li>
+          <li>Retention metrics: D1, D7, D30 — tracking and improving</li>
+          <li>Cohort analysis for monetization optimization</li>
+          <li>Session length, DAU/MAU, and engagement metrics</li>
+          <li>Heatmaps: player position tracking in 3D worlds</li>
+          <li>Economy balancing: sink/source analysis, inflation control</li>
+          <li>Live events: time-limited content, battle passes</li>
+          <li>Seasonal content calendar planning</li>
+          <li>Crash reporting: Sentry, Crashlytics integration</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🏪</span>
+        <div class="module-name">Platform Certification &amp; Release <span class="level-badge level-expert">Expert</span></div>
+        <p class="module-desc">Navigating platform submission and certification requirements.</p>
+        <ul class="topic-list">
+          <li>Steam: Steamworks SDK, achievements, cloud saves, DLC</li>
+          <li>Steam Direct submission and review process</li>
+          <li>iOS App Store: App Store Connect, TestFlight, review guidelines</li>
+          <li>Google Play: Closed testing, staged rollout, Play Console</li>
+          <li>Console certification: TRC (PlayStation), TCR (Xbox), LotCheck (Nintendo)</li>
+          <li>Age ratings: PEGI, ESRB, IARC</li>
+          <li>GDPR / CCPA compliance for player data</li>
+          <li>Accessibility guidelines: CVAA, screen reader, colorblind modes</li>
+          <li>Game monetization: IAP, subscriptions, loot box regulations</li>
+          <li>Localization QA and market-specific content rules</li>
+        </ul>
+      </div>
+      <div class="module">
+        <span class="module-icon">🎭</span>
+        <div class="module-name">Production &amp; Team Management <span class="level-badge level-expert">Expert</span></div>
+        <p class="module-desc">Running a development team with professional game industry processes.</p>
+        <ul class="topic-list">
+          <li>Agile Scrum for game dev: 2-week sprint cycles</li>
+          <li>Jira / Hansoft for AAA task tracking</li>
+          <li>GDD (Game Design Document) writing and maintenance</li>
+          <li>TDD (Technical Design Document) structure</li>
+          <li>Milestone planning: Alpha, Beta, Gold, launch</li>
+          <li>Crunch avoidance: sustainable pace practices</li>
+          <li>Art direction: style guide, concept art pipeline</li>
+          <li>QA pipeline: bug triage, regression testing, coverage</li>
+          <li>Post-mortem culture: blameless retrospectives</li>
+          <li>Portfolio and shipped title documentation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Specialization Tracks</div>
+    <div class="skills-grid">
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Graphics / Rendering Engineer</span><span class="skill-level">Shader, GPU, VFX</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Gameplay Programmer</span><span class="skill-level">Systems, Combat, Physics</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">AI / Systems Engineer</span><span class="skill-level">DOTS, Pathfinding, Behavior</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Network Engineer</span><span class="skill-level">Netcode, Relay, Backend</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Technical Artist</span><span class="skill-level">Shaders, Pipeline, Tools</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">3D Character Artist</span><span class="skill-level">Sculpt, Rig, Animate</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Environment Artist</span><span class="skill-level">Modular, Lighting, LOD</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">DevOps / Build Engineer</span><span class="skill-level">CI/CD, Cloud, Platforms</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">LiveOps / Economy Designer</span><span class="skill-level">Analytics, Events, Retention</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Game Designer</span><span class="skill-level">Systems, Balancing, UX</span></div>
+    </div>
+
+    <div class="section-label">Capstone Projects</div>
+    <div class="project-row">
+      <div class="project-card">
+        <div class="project-num">CAPSTONE 06.A</div>
+        <div class="project-name">Ship a Live Game on Steam</div>
+        <p class="project-desc">Full production cycle: GDD → Alpha → Beta → Gold → Launch. Store page, achievements, Cloud Save, analytics, post-launch patch. Solo or 2-person team. 3–6 month scope game.</p>
+        <div class="project-tags"><span class="tag">Steamworks</span><span class="tag">Live</span><span class="tag">Analytics</span><span class="tag">Marketing</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">CAPSTONE 06.B</div>
+        <div class="project-name">Mobile Live Game with UGS</div>
+        <p class="project-desc">F2P mobile game with full UGS stack: Economy, Remote Config, A/B testing, Leaderboards, Cloud Save, push notifications. Play Store soft launch → global release.</p>
+        <div class="project-tags"><span class="tag">UGS</span><span class="tag">Economy</span><span class="tag">F2P</span><span class="tag">Google Play</span></div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">CAPSTONE 06.C</div>
+        <div class="project-name">Technical Portfolio &amp; GDC Talk</div>
+        <p class="project-desc">Document one major technical system from your games in conference talk format (slides + writeup). Performance benchmarks, architecture decisions, lessons learned, code walkthrough.</p>
+        <div class="project-tags"><span class="tag">Presentation</span><span class="tag">Writing</span><span class="tag">Portfolio</span></div>
+      </div>
+    </div>
+
+    <div class="checkpoint">
+      <div class="checkpoint-title">🎓 Graduation Checklist — Enterprise Ready</div>
+      <ul class="checkpoint-list">
+        <li>Has shipped at least one title on a real platform</li>
+        <li>Can set up CI/CD pipeline from scratch</li>
+        <li>Understands platform certification requirements</li>
+        <li>Has integrated full UGS or equivalent backend</li>
+        <li>Can lead a 3–5 person team with Agile process</li>
+        <li>Writes technical design documentation</li>
+        <li>Has 5+ shipped/portfolio projects on GitHub</li>
+        <li>Proficient in at least one specialization track</li>
+        <li>Has presented or written a post-mortem</li>
+        <li>Understands GDPR and basic legal requirements</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TOTAL ROADMAP SUMMARY -->
+  <div style="margin-top:4rem; background: var(--surface); border: 1px solid var(--border2); border-radius:16px; padding:3rem; text-align:center;">
+    <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);margin-bottom:1rem">Total Roadmap</div>
+    <h2 style="font-family:var(--font-display);font-size:2.5rem;font-weight:800;color:var(--text);margin-bottom:1rem">From Zero to Enterprise Game Developer</h2>
+    <p style="color:var(--muted);font-size:15px;max-width:600px;margin:0 auto 2.5rem;line-height:1.7">Complete this curriculum and you'll have the skills, portfolio, and shipped titles to work at any major game studio or ship your own commercial title.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;max-width:800px;margin:0 auto">
+      <div style="background:var(--bg2);padding:1.5rem 1rem;text-align:center">
+        <div style="font-family:var(--font-display);font-size:2rem;font-weight:800;color:#00e5ff">6</div>
+        <div style="font-size:11px;color:var(--dim);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px">Phases</div>
+      </div>
+      <div style="background:var(--bg2);padding:1.5rem 1rem;text-align:center">
+        <div style="font-family:var(--font-display);font-size:2rem;font-weight:800;color:#a855f7">24+</div>
+        <div style="font-size:11px;color:var(--dim);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px">Months</div>
+      </div>
+      <div style="background:var(--bg2);padding:1.5rem 1rem;text-align:center">
+        <div style="font-family:var(--font-display);font-size:2rem;font-weight:800;color:#22d3a0">36</div>
+        <div style="font-size:11px;color:var(--dim);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px">Modules</div>
+      </div>
+      <div style="background:var(--bg2);padding:1.5rem 1rem;text-align:center">
+        <div style="font-family:var(--font-display);font-size:2rem;font-weight:800;color:#f59e0b">17</div>
+        <div style="font-size:11px;color:var(--dim);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px">Projects</div>
+      </div>
+      <div style="background:var(--bg2);padding:1.5rem 1rem;text-align:center">
+        <div style="font-family:var(--font-display);font-size:2rem;font-weight:800;color:#f472b6">3</div>
+        <div style="font-size:11px;color:var(--dim);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px">Capstones</div>
+      </div>
+      <div style="background:var(--bg2);padding:1.5rem 1rem;text-align:center">
+        <div style="font-family:var(--font-display);font-size:2rem;font-weight:800;color:#60a5fa">∞</div>
+        <div style="font-size:11px;color:var(--dim);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em;margin-top:4px">Potential</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>Enterprise Game Development Roadmap · C# → DSA → Unity → Blender → Advanced Systems → Production Pipeline</p>
+  <p style="margin-top:8px">Curriculum designed for university-level rigor and AAA studio preparation · 2024–2026</p>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('.phase');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        filterBtns.forEach(b => {
+          b.classList.toggle('active', b.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { threshold: 0.2 });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
